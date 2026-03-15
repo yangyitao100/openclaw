@@ -702,6 +702,17 @@ export function discoverOpenClawPlugins(params: {
       diagnostics,
       seen,
     });
+    // Warn when workspace-local extensions are auto-discovered so operators
+    // know untrusted workspace code is being loaded (#46688).
+    const workspaceCandidates = candidates.filter((c) => c.origin === "workspace");
+    if (workspaceCandidates.length > 0) {
+      const names = workspaceCandidates.map((c) => c.pluginId).join(", ");
+      diagnostics.push({
+        level: "warn",
+        message: `workspace-local extensions auto-discovered from ${roots.workspace}: ${names}. Pin trust via plugins.allow or move to the global extensions directory.`,
+        source: roots.workspace,
+      });
+    }
   }
 
   if (roots.stock) {
