@@ -464,7 +464,7 @@ export function createOllamaStreamFn(
         // `think` boolean. Forward the reasoning level so `think: false` is
         // sent explicitly when thinking is disabled (#46680).
         const thinkParam: { think?: boolean } = {};
-        if (options?.reasoning && options.reasoning !== "off") {
+        if (options?.reasoning) {
           thinkParam.think = true;
         } else if (options) {
           // Thinking explicitly disabled – tell Ollama not to think.
