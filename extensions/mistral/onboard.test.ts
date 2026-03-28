@@ -20,7 +20,7 @@ describe("mistral onboard", () => {
     const cfg = applyMistralConfig({});
     expect(cfg.models?.providers?.mistral).toMatchObject({
       baseUrl: "https://api.mistral.ai/v1",
-      api: "openai-completions",
+      api: "mistral-conversations",
     });
     expect(resolveAgentModelPrimaryValue(cfg.agents?.defaults?.model)).toBe(
       MISTRAL_DEFAULT_MODEL_REF,
@@ -38,7 +38,7 @@ describe("mistral onboard", () => {
     );
 
     expect(cfg.models?.providers?.mistral?.baseUrl).toBe("https://api.mistral.ai/v1");
-    expect(cfg.models?.providers?.mistral?.api).toBe("openai-completions");
+    expect(cfg.models?.providers?.mistral?.api).toBe("mistral-conversations");
     expect(cfg.models?.providers?.mistral?.apiKey).toBe("old-key");
     expect(cfg.models?.providers?.mistral?.models.map((m) => m.id)).toEqual([
       "custom-model",

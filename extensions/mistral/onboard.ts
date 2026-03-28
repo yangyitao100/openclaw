@@ -14,7 +14,7 @@ const mistralPresetAppliers = createDefaultModelPresetAppliers({
   primaryModelRef: MISTRAL_DEFAULT_MODEL_REF,
   resolveParams: (_cfg: OpenClawConfig) => ({
     providerId: "mistral",
-    api: "openai-completions",
+    api: "mistral-conversations",
     baseUrl: MISTRAL_BASE_URL,
     defaultModel: buildMistralModelDefinition(),
     defaultModelId: MISTRAL_DEFAULT_MODEL_ID,

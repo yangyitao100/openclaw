@@ -4,7 +4,7 @@ import { buildMistralCatalogModels, MISTRAL_BASE_URL } from "./model-definitions
 export function buildMistralProvider(): ModelProviderConfig {
   return {
     baseUrl: MISTRAL_BASE_URL,
-    api: "openai-completions",
+    api: "mistral-conversations",
     models: buildMistralCatalogModels(),
   };
 }
