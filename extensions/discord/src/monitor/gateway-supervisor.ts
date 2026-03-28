@@ -42,11 +42,13 @@ export function classifyDiscordGatewayEvent(params: {
     };
   }
   if (message.includes("Max reconnect attempts")) {
+    // Check if this is due to an intentional abort (maxAttempts: 0)
+    const isIntentionalAbort = message.includes("(0)") || message.includes("attempts (0)");
     return {
       type: "reconnect-exhausted",
       err: params.err,
       message,
-      shouldStopLifecycle: true,
+      shouldStopLifecycle: !isIntentionalAbort,
     };
   }
   if (message.includes("Fatal Gateway error")) {

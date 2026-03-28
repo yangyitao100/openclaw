@@ -1074,6 +1074,10 @@ async function observeConfigSnapshot(
     lastObservedSuspiciousSignature: suspiciousSignature,
   });
   await writeConfigHealthState(deps, healthState);
+  
+  // Clear in-process dedup entry if health state was successfully persisted
+  // (writeConfigHealthState has silent catch, so we can't detect failures)
+  observedSuspiciousSignatures.delete(signatureWithPath);
 }
 
 function observeConfigSnapshotSync(
@@ -1200,6 +1204,10 @@ function observeConfigSnapshotSync(
     lastObservedSuspiciousSignature: suspiciousSignature,
   });
   writeConfigHealthStateSync(deps, healthState);
+  
+  // Clear in-process dedup entry if health state was successfully persisted
+  // (writeConfigHealthStateSync has silent catch, so we can't detect failures)
+  observedSuspiciousSignatures.delete(signatureWithPath);
 }
 
 export type ConfigIoDeps = {

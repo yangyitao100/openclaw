@@ -1,3 +1,4 @@
+import { TypeGuard } from "@sinclair/typebox";
 import type { ModelCompatConfig } from "../config/types.models.js";
 import { stripUnsupportedSchemaKeywords } from "../plugin-sdk/provider-tools.js";
 import { resolveUnsupportedToolSchemaKeywords } from "../plugins/provider-model-compat.js";
@@ -176,7 +177,7 @@ export function normalizeToolParameters(
   const baseRequired = Array.isArray(schema.required)
     ? schema.required.filter((key) => typeof key === "string")
     : undefined;
-  const mergedRequired =
+  let mergedRequired =
     baseRequired && baseRequired.length > 0
       ? baseRequired
       : objectVariants > 0
@@ -184,6 +185,14 @@ export function normalizeToolParameters(
             .filter(([, count]) => count === objectVariants)
             .map(([key]) => key)
         : undefined;
+  
+  // Filter out fields that are marked as TypeBox Optional in mergedProperties
+  if (mergedRequired && Object.keys(mergedProperties).length > 0) {
+    mergedRequired = mergedRequired.filter((key) => {
+      const property = mergedProperties[key];
+      return property && !TypeGuard.IsOptional(property);
+    });
+  }
 
   const nextSchema: Record<string, unknown> = { ...schema };
   const flattenedSchema = {
