@@ -352,12 +352,13 @@ export async function getReplyFromConfig(
     if (!resetTriggered || !command.isAuthorizedSender || command.resetHookTriggered) {
       return;
     }
+    // Emit reset hooks for ANY matched reset trigger, not just the default
+    // /new and /reset commands.  Custom triggers (e.g. !new, !reset) were
+    // previously skipped here, leaving internal hook listeners (and the ACP
+    // cleanup path) unnotified, so cached context kept accumulating.  #55474.
     const resetMatch = command.commandBodyNormalized.match(/^\/(new|reset)(?:\s|$)/);
-    if (!resetMatch) {
-      return;
-    }
+    const action: ResetCommandAction = resetMatch?.[1] === "reset" ? "reset" : "new";
     const { emitResetCommandHooks } = await import("./commands-core.runtime.js");
-    const action: ResetCommandAction = resetMatch[1] === "reset" ? "reset" : "new";
     await emitResetCommandHooks({
       action,
       ctx,
